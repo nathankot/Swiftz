@@ -35,7 +35,7 @@ public struct List<A> {
 	let next : () -> (head : A, tail : List<A>)
 
 	/// Constructs a potentially infinite list.
-	init(_ next : @autoclosure () -> (head : A, tail : List<A>), isEmpty : Bool = false) {
+	init(@autoclosure(escaping) _ next : () -> (head : A, tail : List<A>), isEmpty : Bool = false) {
 		self.len = isEmpty ? 0 : -1
 		self.next = next
 	}
@@ -337,7 +337,7 @@ public struct List<A> {
 	/// Returns a List of an infinite number of iteratations of applications of a function to an
 	/// initial value.
 	public static func iterate(f : A -> A, initial : A) -> List<A> {
-		return List((initial, iterate(f, initial: f(initial))))
+		return List((initial, self.iterate(f, initial: f(initial))))
 	}
 
 	/// Cycles a finite list into an infinite list.
